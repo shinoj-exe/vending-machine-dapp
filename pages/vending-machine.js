@@ -1,12 +1,30 @@
 import styles from '../styles/VendingMachine.module.css'
-import { useState } from 'react'
+import { useState ,useEffect} from 'react'
 import 'bulma/css/bulma.css'
 import Web3 from 'web3'
+import vmContract from '@/blockchain/vending'
 import Head from 'next/head'
 // Ox9ca89a0e3fba2abe5e075b130d30197690e75371
+// owner address: 0xd52b01e012a6dFCba7760Db149681648D10762B1
 const VendingMachine=()=>{
     const [error,setError]=useState('');
+    const [inventory,setInventory]=useState('');
+    const [myDonutCount,setMyDonutCount]=useState('');
+
     let web3;
+
+    useEffect(()=>{
+        getInventoryHandler()
+    },[])
+
+    const getInventoryHandler=async()=>{
+        const inventory=await vmContract.methods.getVendingMachineBalance().call()
+        setInventory(inventory)
+    }
+
+    const getMyDonutCountHandler=async()=>{
+        const accounts=await web3.eth.getAccounts()
+    }
 
     const connectWalletHandler=async()=>{
         if(typeof window !== "undefined" && typeof window.ethereum !== "undefined"){ //this condition satisfies only if the user has metamask
@@ -41,7 +59,12 @@ const VendingMachine=()=>{
           </nav>
           <section>
             <div className="container">
-                <p>Place</p>
+                <h2>Vending Machine Inventory: {inventory}</h2>
+            </div>
+          </section>
+          <section>
+            <div className="container">
+                <h2>My Donut Count: {myDonutCount}</h2>
             </div>
           </section>
           <section>
