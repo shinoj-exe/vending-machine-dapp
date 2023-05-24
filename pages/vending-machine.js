@@ -1,8 +1,27 @@
 import styles from '../styles/VendingMachine.module.css'
+import { useState } from 'react'
 import 'bulma/css/bulma.css'
+import Web3 from 'web3'
 import Head from 'next/head'
 
-export default function VendingMachine(){
+const VendingMachine=()=>{
+    const [error,setError]=useState('');
+    let web3;
+
+    const connectWalletHandler=async()=>{
+        if(typeof window !== "undefined" && typeof window.ethereum !== "undefined"){ //this condition satisfies only if the user has metamask
+            try {
+                await window.ethereum.request({method: "eth_requestAccounts"})
+                web3=new Web3(window.ethereum);
+            } catch (error) {
+                console.log(error.message);
+                setError(error.message)
+            }
+        }else{
+            // metamask not installed
+            alert("Please install metamask")
+        }
+    }
     return (
         <div className={styles.main}>
 
@@ -16,7 +35,7 @@ export default function VendingMachine(){
                     <h1>Vending Machine </h1>
                 </div>
                 <div className="navbar-end">
-                    <button className="button is-primary">Connect Wallet</button>
+                    <button className="button is-primary" onClick={connectWalletHandler}>Connect Wallet</button>
                 </div>
             </div>
           </nav>
@@ -25,7 +44,14 @@ export default function VendingMachine(){
                 <p>Place</p>
             </div>
           </section>
+          <section>
+            <div className="container has-text-danger">
+                <p>{error}</p>
+            </div>
+          </section>
             {/* <h1>Vending Machinne</h1> */}
         </div>
     )
 }
+
+export default VendingMachine;
