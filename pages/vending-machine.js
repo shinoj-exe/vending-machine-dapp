@@ -3,7 +3,7 @@ import { useState } from 'react'
 import 'bulma/css/bulma.css'
 import Web3 from 'web3'
 import Head from 'next/head'
-
+// Ox9ca89a0e3fba2abe5e075b130d30197690e75371
 const VendingMachine=()=>{
     const [error,setError]=useState('');
     let web3;
